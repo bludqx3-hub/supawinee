@@ -7,36 +7,27 @@
 </head>
 <body>
 
-<!DOCTYPE html>
-<html lang="th">
-<head>
-  <meta charset="UTF-8">
-  <title>Lesson AI Assistant</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
 <div class="container">
   <div class="card">
     <h1>Lesson AI Assistant</h1>
-    <p class="sub">เขียนบทเรียน → ถามคำถาม → AI ตอบจากบทเรียน</p>
+    <p class="sub">เขียนบทเรียน → ถามคำถาม → AI ตอบจากบทเรียน (รูปแบบแชต)</p>
 
+    <!-- บทเรียน -->
     <label>บทเรียน</label>
     <textarea id="lesson" placeholder="วางหรือพิมพ์บทเรียนที่นี่"></textarea>
 
+    <!-- คำถาม -->
     <label>คำถาม</label>
     <textarea id="question" placeholder="พิมพ์คำถามจากบทเรียน"></textarea>
 
+    <!-- ปุ่มถาม -->
     <button onclick="askAI()">ถาม AI</button>
 
-    <div class="answer-box">
-  <h3>คำตอบจาก AI</h3>
-  <p id="answer">AI พร้อมตอบคำถาม</p>
-</div>
+    <!-- กล่องแชต (แทนส่วนคำตอบเดิม) -->
+    <div id="chat" class="chat-box"></div>
 
-<script src="script.js"></script>
-</body>
-</html>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>
