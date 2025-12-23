@@ -1,62 +1,44 @@
-body {
-  font-family: "Segoe UI", sans-serif;
-  background: #f4f6fb;
+function askAI() {
+  const lesson = document.getElementById("lesson").value;
+  const question = document.getElementById("question").value;
+  const answer = document.getElementById("answer");
+
+  if (lesson.trim() === "" || question.trim() === "") {
+    answer.innerText = "กรุณาใส่บทเรียนและคำถามก่อน";
+    return;
+  }
+
+  answer.innerText = "AI กำลังวิเคราะห์บทเรียน...";
+
+  setTimeout(() => {
+    answer.innerText = findAnswer(lesson, question);
+  }, 1200);
 }
 
-.container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+function findAnswer(lesson, question) {
+  const sentences = lesson.split(/[\.\n]/);
+  const keywords = question.toLowerCase().split(" ");
 
-.card {
-  width: 600px;
-  background: white;
-  padding: 24px;
-  border-radius: 14px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-}
+  let bestSentence = "";
+  let maxScore = 0;
 
-h1 {
-  margin-top: 0;
-}
+  sentences.forEach(sentence => {
+    let score = 0;
+    keywords.forEach(word => {
+      if (sentence.toLowerCase().includes(word)) {
+        score++;
+      }
+    });
 
-.sub {
-  color: #666;
-  font-size: 14px;
-}
+    if (score > maxScore) {
+      maxScore = score;
+      bestSentence = sentence;
+    }
+  });
 
-label {
-  font-weight: 600;
-  margin-top: 14px;
-  display: block;
-}
+  if (maxScore === 0) {
+    return "AI ไม่พบคำตอบที่ตรงกับบทเรียนที่ให้มา";
+  }
 
-textarea {
-  width: 100%;
-  height: 90px;
-  margin-top: 6px;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-button {
-  width: 100%;
-  margin-top: 16px;
-  padding: 12px;
-  background: #4f46e5;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  cursor: pointer;
-}
-
-.answer-box {
-  margin-top: 20px;
-  background: #f9fafb;
-  padding: 14px;
-  border-radius: 8px;
+  return bestSentence.trim();
 }
