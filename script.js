@@ -1,44 +1,53 @@
 function askAI() {
   const lesson = document.getElementById("lesson").value;
   const question = document.getElementById("question").value;
-  const answer = document.getElementById("answer");
+  const chat = document.getElementById("chat");
 
-  if (lesson.trim() === "" || question.trim() === "") {
-    answer.innerText = "กรุณาใส่บทเรียนและคำถามก่อน";
-    return;
-  }
+  if (lesson.trim() === "" || question.trim() === "") return;
 
-  answer.innerText = "AI กำลังวิเคราะห์บทเรียน...";
+  addMessage(question, "user");
+  addMessage("AI กำลังวิเคราะห์บทเรียน...", "ai");
 
   setTimeout(() => {
-    answer.innerText = findAnswer(lesson, question);
-  }, 1200);
+    const answer = smartMultiAnswer(lesson, question);
+    chat.lastChild.remove();
+    addMessage(answer, "ai");
+  }, 1000);
 }
 
-function findAnswer(lesson, question) {
-  const sentences = lesson.split(/[\.\n]/);
-  const keywords = question.toLowerCase().split(" ");
+function addMessage(text, type) {
+  const chat = document.getElementById("chat");
+  const msg = document.createElement("div");
+  msg.className = type;
+  msg.innerText = text;
+  chat.appendChild(msg);
+  chat.scrollTop = chat.scrollHeight;
+}
 
-  let bestSentence = "";
-  let maxScore = 0;
+function smartMultiAnswer(lesson, question) {
+  const stopWords = [
+    "คือ","อะไร","อย่างไร","เพราะอะไร","บ้าง",
+    "ได้แก่","อธิบาย","จง","จากบทเรียน"
+  ];
+
+  let keywords = question.toLowerCase().split(" ");
+  keywords = keywords.filter(w => !stopWords.includes(w) && w.length > 1);
+
+  const sentences = lesson.split(/[\n\.]/);
+  let matches = [];
 
   sentences.forEach(sentence => {
     let score = 0;
     keywords.forEach(word => {
-      if (sentence.toLowerCase().includes(word)) {
-        score++;
-      }
+      if (sentence.toLowerCase().includes(word)) score++;
     });
-
-    if (score > maxScore) {
-      maxScore = score;
-      bestSentence = sentence;
-    }
+    if (score > 0) matches.push(sentence.trim());
   });
 
-  if (maxScore === 0) {
-    return "AI ไม่พบคำตอบที่ตรงกับบทเรียนที่ให้มา";
+  if (matches.length === 0) {
+    return "จากการวิเคราะห์บทเรียน ไม่พบข้อมูลที่ตรงกับคำถาม";
   }
 
-  return bestSentence.trim();
+  return "จากบทเรียนพบว่า\n- " + matches.slice(0, 3).join("\n- ");
 }
+
